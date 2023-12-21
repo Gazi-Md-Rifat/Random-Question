@@ -1,65 +1,80 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
-
-class Node {
-public:
-    int val;
-    Node *next;
-
-    Node(int x){
-        val = x;
-        next = NULL;
+void printData(list<string> add){
+    list<string> :: iterator it = add.begin();
+    for (it; it != add.end(); it++){
+        cout << *it << " ";
     }
-
-};
-
-
-Node *makeLikedList(Node *head, int val){
-    if (head == NULL){
-       return new Node(val);
-    }
-    head ->next = makeLikedList(head->next, val);
-    return head;
+    cout << endl;
 }
-
-void deleteDuplicate(Node *head, int val){
-    if (!head){
-        return;
-    }
-    if (head->next && head->next->val == val){
-        head->next = head->next->next;
-        deleteDuplicate(head, val);
-    }
-    deleteDuplicate(head->next, val);
-    return;
-}
-
 
 int main(){
 
-    Node *head = NULL;
-    int n1, n2;
-    while(1){
-        cin >> n1;
-        if (n1 == -1){
+    list<string> web;
+    string address;
+    getline(cin, address);
+    int n;
+    cin >> n;
+    cin.ignore();
+
+
+    // sore address
+    string data = "";
+    for (int i = 0; i < address.size(); i++){
+        if (data == "end"){
             break;
         }
-       head = makeLikedList(head, n1);
+        if (address[i] == ' '){
+            web.push_back(data);
+            data = "";
+            continue;
+        }
+        data = data + address[i];
     }
 
-    Node *root = head;
-    while(head){
-        deleteDuplicate(head, head->val);
-        head = head->next;
+
+    // command & act through command
+    list<string> :: iterator track;
+    list<string> :: iterator beg = web.begin();
+    list<string> :: iterator end = web.end();
+    for (int i = 0; i < n; i++){
+        string command;
+        getline(cin, command);
+        if (command == "prev"){
+            if (track == beg){
+                cout << "Not Available";
+            }
+            else {
+                track--;
+                cout << *track;
+            }
+        }
+        else if (command == "next"){
+            list<string> :: iterator temp = end;
+            if (track == --temp){
+                cout << "Not Available";
+            }
+            else {
+                track++;
+                cout << *track;
+            }
+        }
+        else {
+            string add = command.substr(6, command.size());
+            list<string> :: iterator ans = find(beg, end, add);
+            if (ans != end){
+                cout << *ans;
+                track = ans;
+            }
+            else {
+                cout << "Not Available";
+            }
+        }
+        cout << endl;
     }
 
-    // cout << endl << endl << endl;
-
-    while(root){
-        cout << root->val << " ";
-        root = root->next;
-    }
+    // printData(web);    // print list called function
 
     return 0;
 }
